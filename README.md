@@ -4,6 +4,14 @@
 This repository contains an AI-powered conversational agent designed to streamline the **order capture process** for distributors and retailers of GreenLife Foods. The agent enables users to **inquire about past orders, place new orders, check product availability, modify/cancel orders, and reorder past purchases** through a conversational interface.<br>
 The agent is able to **course-correct** by means of feedback loops in the conversation, and without explicit logic routing of any kind. For example, if a user mistakenly places an order for a product that does not exist in the inventory, the agent will be corrected at *place_order()*, after which it is likely to implicitly call *list_all_products()* to disambiguate the user's query.
 
+## Prompt
+- The system prompt can be found in src/utils/config.py
+- ReAct methodology implemented from scratch.
+- Success/Error response fed back into ReAct loop to self-correct.
+- Examples given at src/exemplars.txt
+---
+
+
 ## Features
 - **Conversational AI** using OpenAI GPT-4 mini
 - **Order management system** (create, modify, cancel, reorder)
