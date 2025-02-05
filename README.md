@@ -1,4 +1,3 @@
-
 # Supply Chain Agent
 
 ## Overview
@@ -61,8 +60,6 @@ This will launch the chatbot interface in your browser.
 
 ---
 
-
-
 ## Environment Variables
 Create a `.env` file in the root directory with the following:
 ```ini
@@ -79,7 +76,7 @@ LLAMA_API_KEY=your-llama-api-key
 - The order status assumes 4 exhaustive states: **Pending, Confirmed, Shipped, Cancelled**
 - Authentication has not been implemented yet in any measure except by not providing the user a tool to query the User table. Therefore, a user can only access user/order information about themselves.
 - Only one tool call possible at a time.
-- **[EXPERIMENTAL OBSERVATION]** Long running conversations tend to act as pseduo exemplars to the model and encourage it to break format, causing unchecked generation till an error is thrown. Handling conversation history/memory to be implemented in a better way.
+- **[EXPERIMENTAL OBSERVATION]** Long running conversations tend to act as pseudo-exemplars to the model and encourage it to break format, causing unchecked generation till an error is thrown. Handling conversation history/memory to be implemented in a better way.
 
 ---
 
@@ -90,3 +87,51 @@ LLAMA_API_KEY=your-llama-api-key
 - **Shipped**: Orders that are "Confirmed" change to "Shipped" after a configurable parameter in the config: `SHIPPING_TURNAROUND_MINS` (currently set to 5 minutes).
 - **Cancelled**: This status applies if the user opts to cancel an existing order, and the cancellation is processed quickly.
 
+---
+
+## Running PostgreSQL Interactive Shell
+To interact with the database directly, start a PostgreSQL interactive session inside the running container:
+```sh
+docker exec -it supply-chain-db psql -U admin -d supply_chain
+```
+
+### **Example Queries**
+
+#### **Check available tables**
+```sql
+\dt
+```
+
+#### **View all users**
+```sql
+SELECT * FROM users;
+```
+
+#### **View all orders placed by a specific user**
+```sql
+SELECT o.id, o.total_amount, o.status, o.created_at
+FROM orders o
+JOIN users u ON o.user_id = u.user_id
+WHERE u.user_id = 'specific-user-id';
+```
+
+#### **View all products in an order**
+```sql
+SELECT oi.order_id, p.name, oi.quantity, oi.price_per_unit
+FROM order_items oi
+JOIN products p ON oi.product_id = p.id
+WHERE oi.order_id = 1;
+```
+
+#### **Count total orders per user**
+```sql
+SELECT u.user_id, COUNT(o.id) AS total_orders
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+GROUP BY u.user_id;
+```
+
+#### **Delete a specific order**
+```sql
+DELETE FROM orders WHERE id = 2;
+```
