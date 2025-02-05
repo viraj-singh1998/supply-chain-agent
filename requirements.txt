@@ -1,0 +1,15 @@
+chromadb
+openai
+groq
+llama-cpp-python
+python-dotenv
+datasets
+wikipedia
+google-api-python-client
+gpt4all
+sqlalchemy
+psycopg2-binary
+alembic
+streamlit
+flask
+requests
